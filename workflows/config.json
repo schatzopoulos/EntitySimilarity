@@ -1,0 +1,18 @@
+{
+    "indir": "/opt/workflows/data/DBLP/nodes/",
+    "irdir": "/opt/workflows/data/DBLP/relations/",
+    "algorithm": "DynP",
+    "hin_out": "/opt/workflows/data/out/HIN.csv",
+    "analysis_out": "/opt/workflows/data/out/PR.csv",
+    "final_out": "/opt/workflows/data/out/TOPK.csv",
+    "k": 100,
+    "t": 1,
+    "w": 0,
+    "min_values": 5,
+    "query": {
+        "metapath": "APC",
+        "constraints": {
+        }
+    }
+    
+}
