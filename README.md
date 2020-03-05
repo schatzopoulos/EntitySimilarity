@@ -1,2 +1,2 @@
-# PS-Join
-Metapath-based Similarity Join in HINs
+# Entity Similarity
+Metapath-based Similarity Join & Search in HINs
