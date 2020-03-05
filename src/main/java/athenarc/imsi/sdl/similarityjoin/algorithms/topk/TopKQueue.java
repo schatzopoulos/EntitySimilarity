@@ -21,7 +21,7 @@ public class TopKQueue {
         private Pair<Integer, Integer> pair;
         private double similarity;
 
-        public TopKQueueRecord(Pair p, double similarity) {
+        public TopKQueueRecord(Pair<Integer, Integer> p, double similarity) {
             this.pair = p;
             this.similarity = similarity;
         }

@@ -45,14 +45,17 @@ public class PSJoin extends SimilarityJoinAlgorithm {
 
     @Override
     public TopKQueue executeSearch(int rowIndex) {
+        Utils.writeProgress(1, "Read Relation Matrix");
+
         RelationMatrix relationMatrix = super.getRelationMatrix();
-        Utils.writeProgress(10, "search");
+
+        Utils.writeProgress(2, "Build Hash Tables");
 
         for (int i=0; i<hashTables.length; i++) {
             hashTables[i] = new HashTable(relationMatrix);
             hashTables[i].build(this.minValues);
         }
-        Utils.writeProgress(20, "search");
+        Utils. writeProgress(3, "Computing Similar Results");
 
         TopKQueue topK = simSearchToK(relationMatrix, rowIndex);
 
@@ -60,12 +63,8 @@ public class PSJoin extends SimilarityJoinAlgorithm {
     }
 
     private TopKQueue simSearchToK(RelationMatrix relationMatrix, int i) {
-        long curTime = System.currentTimeMillis();
 
         TopKQueue topK = new TopKQueue(super.getK());
-
-        int progress = 30;
-        Utils.writeProgress(progress, "search");
 
         for (HashTable hashTable : hashTables) {
 
@@ -98,12 +97,8 @@ public class PSJoin extends SimilarityJoinAlgorithm {
                     }
                 }
             }
-
-            progress += (70 / hashTables.length);
-            Utils.writeProgress(progress, "search");
         }
 
-        topKTime = System.currentTimeMillis() - curTime;
 
         return topK;
     }

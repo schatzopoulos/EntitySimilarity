@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>athenarc.imsi.sdl.similarity</groupId>
-    <artifactId>SimilarityJoin</artifactId>
+    <artifactId>EntitySimilarity</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 

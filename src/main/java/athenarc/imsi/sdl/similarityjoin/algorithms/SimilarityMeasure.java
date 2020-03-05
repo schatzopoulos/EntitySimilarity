@@ -2,10 +2,6 @@ package athenarc.imsi.sdl.similarityjoin.algorithms;
 
 import athenarc.imsi.sdl.similarityjoin.algorithms.relationmatrix.SparseVector;
 
-import java.util.Map;
-
-import static java.lang.Math.sqrt;
-
 public class SimilarityMeasure {
     public enum TYPE { PATH_SIM, JOIN_SIM };
 

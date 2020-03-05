@@ -16,7 +16,7 @@ public class Main {
 
         // check params
         if (args.length != 2) {
-            System.out.println("Usage: java -jar SimilarityJoin.jar -c <json config file>");
+            System.out.println("Usage: java -jar EntitySimilarity.jar -c <json config file>");
             System.exit(1);
         }
 
@@ -34,6 +34,7 @@ public class Main {
 
         String inputfile = (String) config.get("hin_out");
         String outfile = (String) config.get("analysis_out");
+        String operation = (String) config.get("operation");
         int k = ((Long)config.get("k")).intValue();
         int t = ((Long)config.get("t")).intValue();
         int w = ((Long)config.get("w")).intValue();
@@ -47,15 +48,23 @@ public class Main {
         algorithm.readRelationMatrix(inputfile);
 
         // algorithm.printRelationMatrix();
+        TopKQueue topK = null;
+        if (operation.equals("join")) {
+            topK = algorithm.execute();
+        } else if (operation.equals("search")) {
+            int targetId = ((Long)config.get("target_id")).intValue();
+            topK = algorithm.executeSearch(targetId);
+        } else {
+            System.out.println("No supported operation");
+            System.exit(2);
+        }
 
-       TopKQueue topK = algorithm.execute();
+        Utils.writeProgress(4, "Writing Results");
 
-       Utils.writeProgress(4, "Writing Results");
-
-       try {
+        try {
             topK.write(outfile);
-       } catch (IOException e) {
-           System.out.println(e);
-       }
+        } catch (IOException e) {
+            System.out.println(e);
+        }
     }
 }
