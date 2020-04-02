@@ -1,2 +1,2 @@
 # HeySim Library
-Hin-based entity similarity & join
+HIN-based entity similarity & join
