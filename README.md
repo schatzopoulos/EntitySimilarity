@@ -1,2 +1,2 @@
-# Entity Similarity
-Metapath-based Similarity Join & Search in HINs
+# HeySim Library
+Hin-based entity similarity & join
