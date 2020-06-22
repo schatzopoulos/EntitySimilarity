@@ -52,6 +52,9 @@ public class HashTable {
 
     public List<Integer> probe(int rowIndex, int w) {
         SparseVector row = this.matrix.getRow(rowIndex);
+        if (row == null) {
+            return null;
+        }
         BitSet hash = hashFamily.hash(row);
 
         List<Integer> bucketItems = new ArrayList<>();

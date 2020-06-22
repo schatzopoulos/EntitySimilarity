@@ -11,14 +11,15 @@ import athenarc.imsi.sdl.similarityjoin.algorithms.relationmatrix.SparseVector;
 import athenarc.imsi.sdl.similarityjoin.algorithms.topk.TopKQueue;;
 
 public class PSJoin extends SimilarityJoinAlgorithm {
-
+    private String analysis;
     private int t;      // number of hash tables
     private int w;   // threshold for nearby buckets
     private int minValues;      // min row values threshold for
     private HashTable[] hashTables = null;
     private long topKTime = 0;
 
-    public PSJoin(int t, int w, int minValues) {
+    public PSJoin(String analysis, int t, int w, int minValues) {
+        this.analysis = analysis;
         this.t = t;
         this.w = w;
         this.minValues = minValues;
@@ -27,11 +28,11 @@ public class PSJoin extends SimilarityJoinAlgorithm {
 
     @Override
     public TopKQueue execute() {
-        Utils.writeProgress(1, "Read Relation Matrix");
+        Utils.writeProgress(this.analysis, 1, "Reading Relation Matrix");
 
         RelationMatrix relationMatrix = super.getRelationMatrix();
         
-        Utils.writeProgress(2, "Build Hash Tables");
+        Utils. writeProgress(this.analysis, 2, "Computing Top-k Results");
 
         for (int i=0; i<hashTables.length; i++) {
             hashTables[i] = new HashTable(relationMatrix);
@@ -39,23 +40,21 @@ public class PSJoin extends SimilarityJoinAlgorithm {
             // hashTables[i].print();
         }
 
-        Utils. writeProgress(3, "Computing Top-k Results");
         return computeTopK(relationMatrix);
     }
 
     @Override
     public TopKQueue executeSearch(int rowIndex) {
-        Utils.writeProgress(1, "Read Relation Matrix");
+        Utils.writeProgress(this.analysis, 1, "Reading Relation Matrix");
 
         RelationMatrix relationMatrix = super.getRelationMatrix();
 
-        Utils.writeProgress(2, "Build Hash Tables");
+        Utils. writeProgress(this.analysis, 2, "Computing Similar Results");
 
         for (int i=0; i<hashTables.length; i++) {
             hashTables[i] = new HashTable(relationMatrix);
             hashTables[i].build(this.minValues);
         }
-        Utils. writeProgress(3, "Computing Similar Results");
 
         TopKQueue topK = simSearchToK(relationMatrix, rowIndex);
 
@@ -70,6 +69,10 @@ public class PSJoin extends SimilarityJoinAlgorithm {
 
             // find ids in the same bucket
             List<Integer> bucket = hashTable.probe(i, w);
+            // System.out.println(bucket);
+            if (bucket == null) {
+                continue;
+            }
             SparseVector row = relationMatrix.getRow(i);
 
             double normA = row.norm2();

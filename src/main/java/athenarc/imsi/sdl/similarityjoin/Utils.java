@@ -10,7 +10,7 @@ public class Utils {
         return x.xorcardinality(y);
     }
 
-    public static void writeProgress(int progress, String stage) {
-        System.out.println("Similarity Join\t" + progress + "\t" + stage);
+    public static void writeProgress(String analysis, int progress, String stage) {
+        System.out.println(analysis + "\t" + progress + "\t" + stage);
     }
 }
