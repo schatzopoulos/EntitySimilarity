@@ -143,7 +143,7 @@ public class PSJoin extends SimilarityJoinAlgorithm {
                         //                    int[] innerRow = m[rowIds.get(j)];
 
                         double similarity = SimilarityMeasure.calculate(row, innerRow, normA, super.getSimilarityMeasure());
-                        if (!Double.isNaN(similarity)) {
+                        if (!Double.isNaN(similarity) && similarity > 0) {
                             if (topK.check(similarity)) {
                                 topK.add(rowIds.get(i), rowIds.get(j), similarity);
                             }
