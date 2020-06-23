@@ -38,16 +38,20 @@ public class Main {
         if (!analysis.equals("Similarity Join") && !analysis.equals("Similarity Search")) {
             System.exit(-1);
         }
-        
-        int k = ((Long)config.get("k")).intValue();
-        int t = ((Long)config.get("t")).intValue();
-        int minValues = ((Long)config.get("min_values")).intValue();
 
+        int t = ((Long)config.get("t")).intValue();
         int w = -1;
+        int k = -1;
+        int minValues = -1;
+        
         if (analysis.equals("Similarity Search")) {
+            k = ((Long)config.get("searchK")).intValue();
             w = ((Long)config.get("searchW")).intValue();
+            minValues = ((Long)config.get("searchMinValues")).intValue();
         } else {
+            k = ((Long)config.get("joinK")).intValue();
             w = ((Long)config.get("joinW")).intValue();
+            minValues = ((Long)config.get("joinMinValues")).intValue();        
         }
 
         SimilarityJoinAlgorithm algorithm = new PSJoin(analysis, t, w, minValues);
