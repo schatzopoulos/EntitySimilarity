@@ -51,7 +51,17 @@ public class HashTable {
     }
 
     public List<Integer> probe(int rowIndex, int w) {
-        SparseVector row = this.matrix.getRow(rowIndex);
+        SparseVector row = null;
+        try {
+            row = this.matrix.getRow(rowIndex);
+
+        // in case the entity that we search is not in the graph
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return null;
+        }
+        if (row == null) {
+            return null;
+        }
         BitSet hash = hashFamily.hash(row);
 
         List<Integer> bucketItems = new ArrayList<>();

@@ -15,8 +15,8 @@ public class Main {
     public static void main(String [] args) {
 
         // check params
-        if (args.length != 2) {
-            System.out.println("Usage: java -jar EntitySimilarity.jar -c <json config file>");
+        if (args.length != 4) {
+            System.out.println("Usage: java -jar EntitySimilarity.jar -c <json config file> <analysis> <hin_in>");
             System.exit(1);
         }
 
@@ -32,16 +32,29 @@ public class Main {
             System.exit(1);
         }
 
-        String inputfile = (String) config.get("hin_out");
-        String outfile = (String) config.get("analysis_out");
-        String operation = (String) config.get("operation");
-        int k = ((Long)config.get("k")).intValue();
+        String analysis = (String) args[2];
+        String inputfile = (String) args[3];
+
+        if (!analysis.equals("Similarity Join") && !analysis.equals("Similarity Search")) {
+            System.exit(-1);
+        }
+
         int t = ((Long)config.get("t")).intValue();
-        int w = ((Long)config.get("w")).intValue();
-        int minValues = ((Long)config.get("min_values")).intValue();
+        int w = -1;
+        int k = -1;
+        int minValues = -1;
+        
+        if (analysis.equals("Similarity Search")) {
+            k = ((Long)config.get("searchK")).intValue();
+            w = ((Long)config.get("searchW")).intValue();
+            minValues = ((Long)config.get("searchMinValues")).intValue();
+        } else {
+            k = ((Long)config.get("joinK")).intValue();
+            w = ((Long)config.get("joinW")).intValue();
+            minValues = ((Long)config.get("joinMinValues")).intValue();        
+        }
 
-        SimilarityJoinAlgorithm algorithm = new PSJoin(t, w, minValues);
-
+        SimilarityJoinAlgorithm algorithm = new PSJoin(analysis, t, w, minValues);
         algorithm.setK(k);
         algorithm.setSimilarityMeasure(SimilarityMeasure.TYPE.JOIN_SIM);
 
@@ -49,22 +62,23 @@ public class Main {
 
         // algorithm.printRelationMatrix();
         TopKQueue topK = null;
-        if (operation.equals("join")) {
+        String outfile = null;
+
+        if (analysis.equals("Similarity Join")) {
             topK = algorithm.execute();
-        } else if (operation.equals("search")) {
+            outfile = (String) config.get("sim_join_out");
+        } else if (analysis.equals("Similarity Search")) {
             int targetId = ((Long)config.get("target_id")).intValue();
             topK = algorithm.executeSearch(targetId);
-        } else {
-            System.out.println("No supported operation");
-            System.exit(2);
+            outfile = (String) config.get("sim_search_out");
         }
 
-        Utils.writeProgress(4, "Writing Results");
-
+        Utils.writeProgress(analysis, 3, "Writing Results");
+        
         try {
             topK.write(outfile);
         } catch (IOException e) {
             System.out.println(e);
-        }
+        }  
     }
 }
